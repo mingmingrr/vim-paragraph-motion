@@ -8,11 +8,17 @@ if exists('g:loaded_paragraphmotion') || &cp
 endif
 let g:loaded_paragraphmotion = 1
 
+if !exists('g:paragraphmotion_keepjumps')
+    let g:paragraphmotion_keepjumps = 0
+endif
+
 let s:save_cpo = &cpo
 set cpo&vim
 
 function! s:ParagraphMove(delta, visual, count)
-    normal! m'
+    if !g:paragraphmotion_keepjumps
+        normal! m'
+    endif
     if a:visual
         normal! gv
     endif

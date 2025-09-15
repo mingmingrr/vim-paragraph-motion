@@ -17,30 +17,22 @@ function! s:ParagraphMove(delta, visual, count)
         normal! gv
     endif
 
+    normal! 0
+    let flags = a:delta < 0 ? 'bW' : 'W'
     let i = 0
-    if a:delta > 0  " Forward paragraph motion.
-        normal! 0
-        while i < a:count
-            " First empty or whitespace-only line below a line that contains
-            " non-whitespace characters.
-            if search('\m[^[:space:]]', 'Wc') == 0 || search('\m^[[:space:]]*$', 'W') == 0
-                call search('\m\%$', 'W')
-                return
-            endif
-            let i += 1
-        endwhile
-    elseif a:delta < 0  " Backward paragraph motion.
-        normal! ^
-        while i < a:count
-            " First empty or whitespace-only line above a line that contains
-            " non-whitespace characters.
-            if search('\m[^[:space:]]', 'bcW') == 0 || search('\m^[[:space:]]*$', 'bW') == 0
+    while i < a:count
+        " First empty or whitespace-only line below a line that contains
+        " non-whitespace characters.
+        if search('\m[^[:space:]]', flags . 'c') == 0 || search('\m^[[:space:]]*$', flags) == 0
+            if a:delta < 0
                 call cursor(1, 1)
-                return
+            else
+                call search('\m\%$', 'W')
             endif
-            let i += 1
-        endwhile
-    endif
+            return
+        endif
+        let i += 1
+    endwhile
 endfunction
 
 nnoremap <unique> <silent> } :<C-U>call <SID>ParagraphMove( 1, 0, v:count1)<CR>

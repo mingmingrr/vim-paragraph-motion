@@ -27,7 +27,7 @@ function! s:ParagraphMove(delta, visual, count)
         normal! gv
     endif
 
-    normal! 0
+    normal! ^
     let flags = a:delta < 0 ? 'bW' : 'W'
     let i = 0
     while i < a:count

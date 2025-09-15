@@ -12,6 +12,10 @@ if !exists('g:paragraphmotion_keepjumps')
     let g:paragraphmotion_keepjumps = 0
 endif
 
+if !exists('g:paragraphmotion_skipfolds')
+    let g:paragraphmotion_skipfolds = 0
+endif
+
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -36,6 +40,9 @@ function! s:ParagraphMove(delta, visual, count)
                 call search('\m\%$', 'W')
             endif
             return
+        endif
+        if g:paragraphmotion_skipfolds && foldclosed('.') > 0
+            continue
         endif
         let i += 1
     endwhile
